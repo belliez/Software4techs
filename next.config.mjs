@@ -1,1 +1,6 @@
-export default { output: 'export', trailingSlash: true, poweredByHeader: false, devIndicators: false };
+export default {
+  output: "export",
+  trailingSlash: true,
+  poweredByHeader: false,
+  devIndicators: false,
+};

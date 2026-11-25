@@ -21,7 +21,6 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NEXT_PUBLIC_TOOLBOX_CHECKOUT: ${{ vars.TOOLBOX_CHECKOUT }}
-          NEXT_PUBLIC_TOOLBOX_LAUNCH_CHECKOUT: ${{ vars.TOOLBOX_LAUNCH_CHECKOUT }}
           NEXT_PUBLIC_IPOS_CHECKOUT: ${{ vars.IPOS_CHECKOUT }}
       - uses: actions/upload-artifact@v4
         with:
