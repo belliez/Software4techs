@@ -81,7 +81,11 @@ export default function Page() {
           <p className="eyebrow dark">WINDOWS · X64</p>
           <h2>Toolbox licence</h2>
           <Offer />
-          <p>Includes updates within this major version.</p>
+          <p>
+            The current download is the signed Windows x64 Workshop Preview
+            1.5.0. Extract the ZIP and open <strong>Start-AI-Technician.cmd</strong>
+            {" "}to start a case. Updates within this major version are included.
+          </p>
           <a href="/support/">Help with a purchase →</a>
         </aside>
       </section>
