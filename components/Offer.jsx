@@ -1,59 +1,77 @@
 "use client";
 import { useEffect, useState } from "react";
 import { launch, regular, offersEnd } from "../lib/catalog";
-export default function Offer({ teaser = false }) {
-  const [now, setNow] = useState(null);
+
+export default function Offer({ compact = false }) {
+  const [launchPeriod, setLaunchPeriod] = useState(null);
   useEffect(() => {
-    function update() {
-      setNow(Date.now());
+    function refresh() {
+      setLaunchPeriod(Date.now() < offersEnd);
     }
-    update();
-    const handle = setInterval(update, 15000);
-    window.addEventListener("focus", update);
+    refresh();
+    const remaining = offersEnd - Date.now();
+    const timeout =
+      remaining >= 0 && remaining < 2147483647
+        ? window.setTimeout(refresh, remaining + 1)
+        : null;
+    window.addEventListener("focus", refresh);
     return () => {
-      clearInterval(handle);
-      window.removeEventListener("focus", update);
+      window.clearTimeout(timeout);
+      window.removeEventListener("focus", refresh);
     };
   }, []);
-  if (now === null) return teaser ? null : <p>One-off Windows licence.</p>;
-  const promo = now < offersEnd;
-  const url = promo ? launch : regular;
-  if (teaser) {
-    return promo ? (
-      <a className="offer-preview" href="/technician-toolbox/#licence">
-        Black Friday launch pricing <span aria-hidden="true">→</span>
-      </a>
-    ) : null;
-  }
+  const price = launchPeriod ? "£29" : "£49";
+  const total = launchPeriod ? "£34.80" : "£58.80";
+  const url = launchPeriod ? launch : regular;
+  if (compact)
+    return (
+      <div className="card-offer">
+        <strong>
+          {launchPeriod === null
+            ? "One-off licence"
+            : price + " + applicable tax"}
+        </strong>
+        <span>
+          {regular ? "One-time purchase" : "Paid edition coming soon"}
+        </span>
+      </div>
+    );
   return (
     <div className="offer">
       <div className="offerline">
-        <strong>{promo ? "£29" : "£49"}</strong>
-        <span>One-off licence · excluding VAT</span>
+        <strong>{launchPeriod === null ? "One-off licence" : price}</strong>
+        {launchPeriod !== null && <span>One-off licence · before tax</span>}
       </div>
-      {promo && (
+      {launchPeriod && (
         <p>
-          Black Friday launch price through 30 November 2026. £49 from 1
-          December.
+          Black Friday price through Monday 30 November 2026. £49 before tax
+          from 1 December.
         </p>
       )}
-      <p>
-        Including UK VAT,{" "}
-        {promo ? "£34.80 at launch and £58.80 afterwards" : "£58.80"}. Whop
-        calculates tax for your location at checkout.
-      </p>
-      {url ? (
+      {launchPeriod !== null && (
+        <p className="tax-note">
+          UK total with VAT: {total}. Whop calculates the tax for your location.
+        </p>
+      )}
+      {regular && launchPeriod !== null ? (
         <>
           <a className="button" href={url}>
-            Buy Technician Toolbox <span>↗</span>
+            Buy Technician Toolbox <span aria-hidden="true">↗</span>
           </a>
-          <small>Checkout and purchase access via Whop.</small>
+          <small>
+            Pay once through Whop. Find the download in your purchases.
+          </small>
         </>
       ) : (
-        <p className="availability">
-          Checkout is being prepared. Sales open when the signed release is
-          available.
-        </p>
+        !regular && (
+          <p className="availability">
+            <strong>Paid edition coming soon.</strong> Purchases open here when
+            the Windows release is ready.
+          </p>
+        )
+      )}
+      {regular && launchPeriod === null && (
+        <a href={regular}>Check the current price on Whop</a>
       )}
     </div>
   );

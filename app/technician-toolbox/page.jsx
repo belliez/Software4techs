@@ -1,7 +1,9 @@
 import Bench from "../../components/Bench";
 import Offer from "../../components/Offer";
 export const metadata = {
-  title: "Technician Toolbox",
+  title: "AI Technician | Technician Toolbox for Windows",
+  description:
+    "Work through Windows faults with diagnostic evidence, repair notes and AI follow-up questions. Use your own OpenAI API key with Technician Toolbox.",
   alternates: { canonical: "/technician-toolbox/" },
 };
 export default function Page() {
@@ -14,16 +16,17 @@ export default function Page() {
               ← All software
             </a>
             <p className="eyebrow">
-              <i /> PORTABLE WINDOWS TOOLKIT
+              <i /> TECHNICIAN TOOLBOX · WINDOWS X64
             </p>
             <h1>
-              Technician
+              AI
               <br />
-              <em>Toolbox.</em>
+              <em>Technician.</em>
             </h1>
             <p className="lead">
-              Keep your utilities, diagnostics and repair notes together on the
-              USB drive you take from job to job.
+              When a customer says “it only happens sometimes”, start a case.
+              Collect local Windows evidence, ask a focused follow-up using your
+              OpenAI key and record the checks that narrowed down the fault.
             </p>
             <a href="#licence" className="button">
               View licence &amp; pricing <span>↓</span>
@@ -34,7 +37,23 @@ export default function Page() {
       </section>
       <section className="wrap detail">
         <div>
-          <h2>At the bench</h2>
+          <h2>Work through a repair with AI Technician</h2>
+          <div className="feature">
+            <h3>Start with what the machine tells you</h3>
+            <p>
+              Open a case and collect a local diagnostic baseline. Bring the
+              customer's symptoms and your observations into the same
+              investigation.
+            </p>
+          </div>
+          <div className="feature">
+            <h3>Ask the next question</h3>
+            <p>
+              Use the evidence to ask for possible causes and a suggested next
+              check. Compare the answer with your own measurements and keep the
+              findings with the case. Optional AI runs on your OpenAI account.
+            </p>
+          </div>
           <div className="feature">
             <h3>Catch intermittent faults</h3>
             <p>

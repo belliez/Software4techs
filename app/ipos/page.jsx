@@ -1,69 +1,105 @@
-import { iposCheckout, legacy } from "../../lib/catalog";
+import DisplayPreview from "../../components/DisplayPreview";
+import { iposCheckout, iposFree } from "../../lib/catalog";
+
 export const metadata = {
-  title: "iPos display software",
+  title: "iPos v2 | Responsive retail displays for refurbished computers",
+  description:
+    "Explore the paid iPos v2 retail display, try a sample sales screen, and find the original free iPos Classic edition.",
   alternates: { canonical: "/ipos/" },
 };
 export default function Page() {
   return (
     <>
-      <section className="hero sub">
-        <div className="wrap herogrid">
-          <div>
-            <a className="crumb" href="/">
-              ← All software
+      <section className="hero retail-hero">
+        <div className="wrap product-intro">
+          <a className="crumb" href="/#products">
+            ← All software
+          </a>
+          <p className="eyebrow">
+            <i /> IPOS V2 · PAID WINDOWS SOFTWARE
+          </p>
+          <h1>
+            Give every laptop
+            <br />
+            <em>its own sales card.</em>
+          </h1>
+          <p className="lead">
+            Put the price, memory and storage where the customer is already
+            looking. iPos turns a display machine into a branded shop-floor
+            sign.
+          </p>
+          <div className="actions">
+            <a className="button" href={iposCheckout || "#display"}>
+              {iposCheckout ? "Buy iPos v2" : "Try the v2 display"}{" "}
+              <span aria-hidden="true">→</span>
             </a>
-            <p className="eyebrow">
-              <i /> SHOP FLOOR DISPLAY
-            </p>
-            <h1>
-              Meet <em>iPos.</em>
-            </h1>
-            <p className="lead">
-              Give each display laptop its own sales card. Show its
-              specifications, price and your shop’s branding on the screen
-              customers are already looking at.
-            </p>
-            <a className="button" href={iposCheckout || legacy + "shop/ipos/"}>
-              {iposCheckout ? "Get iPos" : "Visit the iPos product page"}{" "}
-              <span>↗</span>
+            <a className="quiet-link" href="#editions">
+              Compare editions ↓
             </a>
           </div>
-          <figure className="displaydemo">
-            <div className="consolehead">
-              <span>iPos</span>
-              <span>SAMPLE DISPLAY</span>
-            </div>
-            <div className="displayinner">
-              <small>REFURBISHED LAPTOP</small>
-              <h2>
-                Business
-                <br />
-                Notebook
-              </h2>
-              <div className="spec">
-                <span>Memory</span>
-                <b>16 GB</b>
-              </div>
-              <div className="spec">
-                <span>Storage</span>
-                <b>512 GB SSD</b>
-              </div>
-              <div className="spec">
-                <span>Display</span>
-                <b>14 inches</b>
-              </div>
-            </div>
-          </figure>
         </div>
       </section>
-      <section className="wrap prose">
-        <h2>Made for the shop floor</h2>
-        <p>
-          Choose a display profile, add your selling price and notes, and
-          present your own product photos or promotional media. Browser export
-          gives you a display you can open locally.
-        </p>
-        <a href="/support/">Product support →</a>
+      <section className="wrap retail-preview">
+        <DisplayPreview />
+      </section>
+      <section className="wrap product-facts">
+        <div>
+          <h2>Set up your stock</h2>
+          <p>
+            iPos Modern detects specifications on Windows. Review the details,
+            add the price and describe anything a customer should know about the
+            machine.
+          </p>
+        </div>
+        <div>
+          <h2>Make it yours</h2>
+          <p>
+            Reuse a display profile across your stock. Add your own images or
+            MP4 slides and choose how long each stays on screen.
+          </p>
+        </div>
+        <div>
+          <h2>Display it offline</h2>
+          <p>
+            Run the display on Windows, or export a browser-ready copy for
+            another machine. Local images and videos work without internet
+            access.
+          </p>
+        </div>
+      </section>
+      <section id="editions" className="wrap editions">
+        <h2>Choose your edition</h2>
+        <div className="supportgrid">
+          <div className="box">
+            <p className="product-category">RESPONSIVE EDITION</p>
+            <h3>iPos v2</h3>
+            <p>
+              For shops that want responsive screens, reusable profiles, media
+              playlists and offline browser export.
+            </p>
+            {iposCheckout ? (
+              <a className="button" href={iposCheckout}>
+                Buy iPos v2 on Whop ↗
+              </a>
+            ) : (
+              <p className="availability">
+                Paid edition. Pricing and checkout will appear here when sales
+                open.
+              </p>
+            )}
+          </div>
+          <div className="box">
+            <p className="product-category">ORIGINAL EDITION</p>
+            <h3>iPos Classic</h3>
+            <p>
+              Free Windows display software for showing the machine's
+              specification, your shop logo, a price and notes.
+            </p>
+            <a className="text-action" href={iposFree}>
+              Get the original iPos free ↗
+            </a>
+          </div>
+        </div>
       </section>
     </>
   );

@@ -38,11 +38,13 @@ export default function Page() {
           <a href={crm}>Explore RepairShopCRM ↗</a>
         </div>
         <div className="box">
-          <h2>iPos</h2>
+          <h2>iPos v2 and iPos Classic</h2>
           <p>
-            Find the original display setup guide and installation information.
+            Compare the responsive paid v2 edition with the original free
+            Windows display software.
           </p>
-          <a href={legacy + "shop/ipos/"}>iPos setup guide ↗</a>
+          <a href="/ipos/#editions">Compare iPos editions →</a>
+          <a href={legacy + "shop/ipos/"}>Original iPos Classic setup ↗</a>
         </div>
         <div className="box">
           <h2>OpenAI usage</h2>

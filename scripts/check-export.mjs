@@ -1,6 +1,12 @@
 import { readdir, readFile } from "node:fs/promises";
 import assert from "node:assert/strict";
-const paths = ["", "technician-toolbox/", "ipos/", "support/"];
+const paths = [
+  "",
+  "technician-toolbox/",
+  "ipos/",
+  "support/",
+  "guides/repair-intake-checklist/",
+];
 for (const route of paths) {
   const html = await readFile("out/" + route + "index.html", "utf8");
   assert(html.includes('id="main"'));

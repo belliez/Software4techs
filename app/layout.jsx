@@ -1,5 +1,6 @@
 import "./style.css";
-import { domain, legacy } from "../lib/catalog";
+import "./storefront.css";
+import { customContact, domain, legacy } from "../lib/catalog";
 export const metadata = {
   metadataBase: new URL(domain),
   title: {
@@ -32,8 +33,10 @@ export default function Layout({ children }) {
               <Brand />
             </a>
             <nav aria-label="Main navigation">
-              <a href="/#products">Software</a>
-              <a href="/support/">Support</a>
+              <a href="/#products">Products</a>
+              <a href="/#custom-apps">Custom apps</a>
+              <a href="/#about">About Paul</a>
+              <a href="/guides/repair-intake-checklist/">Guide</a>
             </nav>
           </div>
         </header>
@@ -47,6 +50,7 @@ export default function Layout({ children }) {
               <p>Software for independent repair shops.</p>
             </div>
             <div className="footlinks">
+              <a href={customContact}>Contact Paul ↗</a>
               <a href="/support/">Support &amp; downloads</a>
               <a href={legacy}>Legacy CRS site ↗</a>
             </div>
