@@ -77,14 +77,14 @@ export default function Page() {
               For shops that want responsive screens, reusable profiles, media
               playlists and offline browser export.
             </p>
+            <p className="availability"><strong>£49 one-off, before tax.</strong> Whop calculates the tax for your location.</p>
             {iposCheckout ? (
               <a className="button" href={iposCheckout}>
                 Buy iPos v2 on Whop ↗
               </a>
             ) : (
               <p className="availability">
-                Paid edition. Pricing and checkout will appear here when sales
-                open.
+                Sales open here when the signed Windows download is ready.
               </p>
             )}
           </div>

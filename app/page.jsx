@@ -69,7 +69,7 @@ export default function Home() {
               price, specifications, photos and video.
             </p>
             <div className="card-offer">
-              <strong>Paid edition</strong>
+              <strong>£49 one-off + applicable tax</strong>
               <span>Original iPos Classic also available free</span>
             </div>
             <a className="card-action" href="/ipos/">

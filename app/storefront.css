@@ -15,7 +15,9 @@
   border: 1px solid #556b60;
   color: #e1eae1;
   background: transparent;
-  font: 600 14px/1.3 inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
   font-family: inherit;
   cursor: pointer;
 }
