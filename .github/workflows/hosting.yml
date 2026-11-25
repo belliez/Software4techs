@@ -20,8 +20,8 @@ jobs:
       - run: npm run build && npm run check
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NEXT_PUBLIC_TOOLBOX_CHECKOUT: ${{ vars.TOOLBOX_CHECKOUT }}
-          NEXT_PUBLIC_IPOS_CHECKOUT: ${{ vars.IPOS_CHECKOUT }}
+          NEXT_PUBLIC_TOOLBOX_CHECKOUT: ${{ vars.TOOLBOX_CHECKOUT || 'https://whop.com/checkout/plan_LdLvG8DAe9Wyk/' }}
+          NEXT_PUBLIC_IPOS_CHECKOUT: ${{ vars.IPOS_CHECKOUT || 'https://whop.com/checkout/plan_xia6DlUhPX5i1/' }}
       - uses: actions/upload-artifact@v4
         with:
           name: storefront

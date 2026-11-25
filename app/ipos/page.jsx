@@ -77,7 +77,7 @@ export default function Page() {
               For shops that want responsive screens, reusable profiles, media
               playlists and offline browser export.
             </p>
-            <p className="availability"><strong>£49 one-off, before tax.</strong> Whop calculates the tax for your location.</p>
+            <p className="availability"><strong>£49 one-off, before tax.</strong> UK total £58.80 including VAT. Whop calculates tax for your location.</p>
             {iposCheckout ? (
               <a className="button" href={iposCheckout}>
                 Buy iPos v2 on Whop ↗

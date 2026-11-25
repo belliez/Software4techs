@@ -72,7 +72,7 @@ export default function Home() {
               <strong>£49 one-off + applicable tax</strong>
               <span>Original iPos Classic also available free</span>
             </div>
-            <a className="card-action" href="/ipos/">
+            <a className="card-action" href={iposCheckout || "/ipos/"}>
               {iposCheckout ? "Buy iPos v2" : "Explore iPos v2"}{" "}
               <span aria-hidden="true">→</span>
             </a>
