@@ -1,3 +1,4 @@
+import AnalyticsPreferences from "../components/AnalyticsPreferences";
 import "./style.css";
 import "./storefront.css";
 import { customContact, domain, legacy } from "../lib/catalog";
@@ -53,6 +54,7 @@ export default function Layout({ children }) {
               <a href={customContact}>Contact Paul ↗</a>
               <a href="/support/">Support &amp; downloads</a>
               <a href={legacy}>Legacy CRS site ↗</a>
+              <AnalyticsPreferences />
             </div>
           </div>
         </footer>

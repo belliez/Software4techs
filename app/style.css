@@ -637,3 +637,47 @@ h1 em {
   color: inherit;
   text-underline-offset: 0.25em;
 }
+
+/* Visitor analytics preferences */
+.analytics-manage {
+  align-self: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.analytics-manage:hover { text-decoration: underline; }
+.analytics-panel {
+  position: fixed;
+  z-index: 10;
+  inset: auto 1rem 1rem auto;
+  width: min(26rem, calc(100% - 2rem));
+  max-height: 75vh;
+  overflow: auto;
+  padding: 1.25rem;
+  border: 1px solid #63766a;
+  border-radius: 10px;
+  background: #10231f;
+  color: #f5f7ef;
+  box-shadow: 0 8px 32px #10231f33;
+  text-align: left;
+}
+.analytics-panel h2 { margin: 0; font-size: 1.15rem; }
+footer .analytics-panel p { margin: .5rem 0 1rem; color: #edf2e9; font-size: .94rem; line-height: 1.45; }
+.analytics-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.analytics-actions button {
+  background: #f5f7ef;
+  color: #172723;
+  border: 1px solid #d6e0d5;
+  border-radius: 5px;
+  padding: .65rem .8rem;
+  font: inherit;
+  cursor: pointer;
+}
+.analytics-panel button:focus-visible, .analytics-manage:focus-visible {
+  outline: 3px solid #c4f68d;
+  outline-offset: 2px;
+}
+@media print { .analytics-panel, .analytics-manage { display: none; } }

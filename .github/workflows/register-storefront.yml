@@ -1,0 +1,55 @@
+name: Register the Software4Techs storefront web app
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/register-storefront.yml']
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  register:
+    if: github.repository == 'belliez/Software4techs' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency: software4techs-web-registration
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: google-github-actions/auth@v3
+        with:
+          project_id: software4techs
+          service_account: storefront-deploy@software4techs.iam.gserviceaccount.com
+          workload_identity_provider: projects/486565825420/locations/global/workloadIdentityPools/storefront/providers/github
+      - name: Register the web app if the project has none
+        shell: python
+        run: |
+          import json, subprocess, time
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+          base = "https://firebase.googleapis.com/v1beta1/"
+          apps = "projects/software4techs/webApps"
+          token = subprocess.check_output(["gcloud", "auth", "application-default", "print-access-token"], text=True).strip()
+          def request(path, body=None):
+              data = json.dumps(body).encode() if body is not None else None
+              req = Request(base + path, data=data, headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+              try:
+                  with urlopen(req, timeout=20) as response:
+                      return json.load(response)
+              except HTTPError as error:
+                  detail = json.load(error).get("error", {})
+                  raise SystemExit(f"{path}: HTTP {error.code}: {detail.get('message', '')}")
+          current = request(apps)
+          if current.get("apps") or current.get("nextPageToken"):
+              print("A web app already exists. Skipping registration.")
+          else:
+              op = request(apps, {"displayName": "Software4Techs storefront"})
+              for _ in range(18):
+                  if op.get("done"):
+                      break
+                  time.sleep(3)
+                  op = request(op["name"])
+              if not op.get("done") or op.get("error"):
+                  raise SystemExit("Check registration status: " + str(op.get("error") or op.get("name")))
+              print("Registered", op["response"]["displayName"])
+              config = request(op["response"]["name"] + "/config")
+              print("Storefront stream:", config.get("measurementId") or "No measurement ID assigned")

@@ -20,7 +20,8 @@ def read_firebase(path, token):
         with urlopen(request, timeout=15) as response:
             return json.load(response)
     except HTTPError as error:
-        print(f"Firebase {path}: HTTP {error.code}")
+        detail = json.load(error).get("error", {})
+        print(f"Firebase {path}: HTTP {error.code}: {detail.get('message', '')}")
     except (URLError, TimeoutError) as error:
         print(f"Firebase {path}: {type(error).__name__}")
     return {}
@@ -40,7 +41,7 @@ def resolve_stream():
     if prop:
         print(f"Linked Analytics property: {prop.get('displayName')} ({prop.get('id')})")
     streams = {m["measurementId"] for m in details.get("streamMappings", [])
-               if ID_FORMAT.fullmatch(m.get("measurementId", ""))}
+               if ID_FORMAT.fullmatch(m.get("measurementId") or "")}
     if len(streams) == 1:
         return streams.pop()
     apps = read_firebase("webApps", token).get("apps", [])
