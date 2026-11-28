@@ -54,6 +54,10 @@ jobs:
           project_id: software4techs
           service_account: storefront-deploy@software4techs.iam.gserviceaccount.com
           workload_identity_provider: projects/486565825420/locations/global/workloadIdentityPools/storefront/providers/github
+      - name: Resolve the storefront Analytics stream
+        env:
+          GA4_MEASUREMENT_ID: ${{ vars.GA4_MEASUREMENT_ID }}
+        run: python3 scripts/analytics-config.py
       - name: Publish current main
         env:
           GH_TOKEN: ${{ github.token }}
