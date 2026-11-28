@@ -70,4 +70,7 @@ jobs:
           current=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)
           if [ "$current" = "$GITHUB_SHA" ]; then
             firebase deploy --only hosting --project software4techs --non-interactive
+            curl --fail --silent --show-error --retry 3 --max-time 20 \
+              "https://software4techs.com/analytics.json?release=$GITHUB_SHA" -o "$RUNNER_TEMP/live-analytics.json"
+            diff -u out/analytics.json "$RUNNER_TEMP/live-analytics.json"
           fi

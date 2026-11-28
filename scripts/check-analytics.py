@@ -47,7 +47,9 @@ try:
     wait = WebDriverWait(driver, 12)
     tag = "#s4t-google-tag"
     def button(label):
-        return driver.find_element(By.XPATH, f"//button[normalize-space(.)='{label}']")
+        element = wait.until(lambda d: d.find_element(By.XPATH, f"//button[normalize-space(.)='{label}']"))
+        driver.execute_script("arguments[0].scrollIntoView({block:'center',behavior:'instant'})", element)
+        return element
     def visible(css):
         return wait.until(lambda d: d.find_element(By.CSS_SELECTOR, css).is_displayed())
     def private_page():
