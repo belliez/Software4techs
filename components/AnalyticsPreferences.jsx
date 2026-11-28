@@ -62,8 +62,14 @@ export default function AnalyticsPreferences() {
     const abort = new AbortController();
     async function load() {
       const response = await fetch("/analytics.json", { signal: abort.signal });
-      if (!response.ok) return;
-      const { measurementId } = await response.json();
+      let measurementId = response.ok ? (await response.json()).measurementId : "";
+      if (!idPattern.test(measurementId)) {
+        const hosted = await fetch("/__/firebase/init.json", { signal: abort.signal });
+        if (!hosted.ok) return;
+        const config = await hosted.json();
+        if (config.projectId !== "software4techs") return;
+        measurementId = config.measurementId;
+      }
       if (abort.signal.aborted || !idPattern.test(measurementId)) return;
       setId(measurementId);
       const saved = getPreference();
