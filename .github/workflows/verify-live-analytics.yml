@@ -1,0 +1,96 @@
+name: Verify the live storefront Analytics stream
+on:
+  push:
+    branches: [checks/live-storefront-analytics]
+permissions: {}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Install browser test dependency
+        run: |
+          python3 -m venv "$RUNNER_TEMP/analytics-check"
+          "$RUNNER_TEMP/analytics-check/bin/pip" -q install selenium==4.30.0
+      - name: Verify one tagged production visit
+        shell: bash
+        run: |
+          "$RUNNER_TEMP/analytics-check/bin/python" - <<'PY'
+          import json
+          import time
+          from urllib.parse import parse_qs, urlsplit
+          from urllib.request import urlopen
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+          
+          site = "https://software4techs.com"
+          with urlopen(site + "/analytics.json", timeout=20) as response:
+              measurement = json.load(response)["measurementId"]
+          assert measurement == "G-2LW64F4HLN", f"Unexpected stream: {measurement}"
+          print("Live measurement ID:", measurement)
+          
+          options = webdriver.ChromeOptions()
+          for arg in ("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--disable-background-networking"):
+              options.add_argument(arg)
+          options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
+          source = "software4techs_test"
+          url = site + "/?utm_source=" + source + "&utm_medium=qa&utm_campaign=analytics_setup"
+          driver = webdriver.Chrome(options=options)
+          
+          def events():
+              return [json.loads(entry["message"])["message"] for entry in driver.get_log("performance")]
+          
+          def google_measurement_host(host):
+              return any(host == suffix or host.endswith("." + suffix) for suffix in ("googletagmanager.com", "google-analytics.com", "analytics.google.com"))
+          
+          try:
+              driver.execute_cdp_cmd("Network.enable", {})
+              driver.get(url)
+              wait = WebDriverWait(driver, 20)
+              button = wait.until(lambda d: d.find_element(By.XPATH, "//button[normalize-space()='Allow analytics']"))
+              assert driver.find_elements(By.CSS_SELECTOR, "#analytics-choices")
+              assert not driver.execute_script("return Boolean(window.gtag)")
+              for event in events():
+                  if event["method"] == "Network.requestWillBeSent":
+                      assert not google_measurement_host(urlsplit(event["params"]["request"]["url"]).hostname or ""), "Google contacted before consent"
+              print("No Google Analytics or tag request before consent.")
+              button.click()
+              requests = set()
+              statuses = {}
+              seen = set()
+              deadline = time.monotonic() + 50
+              while time.monotonic() < deadline:
+                  for event in events():
+                      params = event["params"]
+                      rid = params.get("requestId")
+                      if event["method"] == "Network.requestWillBeSent":
+                          req = params["request"]
+                          dest = urlsplit(req["url"])
+                          if not google_measurement_host(dest.hostname or ""):
+                              continue
+                          seen.add((dest.hostname, dest.path))
+                          if dest.path.rstrip("/") != "/g/collect":
+                              continue
+                          query = parse_qs(dest.query)
+                          for line in (req.get("postData") or "").splitlines() or [""]:
+                              fields = {**query, **parse_qs(line)}
+                              campaign = parse_qs(urlsplit(fields.get("dl", [""])[0]).query)
+                              if (fields.get("tid") == [measurement] and fields.get("en") == ["page_view"]
+                                      and campaign.get("utm_source") == [source] and campaign.get("utm_medium") == ["qa"]
+                                      and campaign.get("utm_campaign") == ["analytics_setup"]):
+                                  requests.add(rid)
+                      elif event["method"] == "Network.responseReceived":
+                          statuses[rid] = params["response"]["status"]
+                      elif event["method"] == "Network.responseReceivedExtraInfo":
+                          statuses[rid] = params["statusCode"]
+                  accepted = [statuses[r] for r in requests if 200 <= statuses.get(r, 0) < 300]
+                  if accepted:
+                      print(f"Verified {measurement} page_view received HTTP {accepted[0]} from Google. Source={source}, medium=qa, campaign=analytics_setup.")
+                      break
+                  time.sleep(.5)
+              else:
+                  raise RuntimeError(f"No accepted tagged page view. Hosts and paths: {sorted(seen)}, matching statuses: {[statuses.get(k) for k in requests]}")
+          finally:
+              driver.quit()
+          PY
